@@ -194,30 +194,30 @@ fun DiagonalLine2() {
         )
     }
 }
-@Preview(showBackground = true)
-@Composable
-fun BoardBasePreview() {
-    Box {
-        BoardBase()
-        HorizontalLine1()
-        HorizontalLine2()
-        HorizontalLine3()
-        VerticalLine1()
-        VerticalLine2()
-        VerticalLine3()
-        DiagonalLine1()
-        DiagonalLine2()
-    }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun CrossPreview() {
-    Cross()
-}
 
-@Preview(showBackground = true)
-@Composable
-fun CirclePreview() {
-    Circle()
-}
+// @Preview(showBackground = true)
+// @Composable
+// fun BoardBasePreview() {
+//     BoardBase()
+//     HorizontalLine1()
+//     HorizontalLine2()
+//     HorizontalLine3()
+//     VerticalLine1()
+//     VerticalLine2()
+//     VerticalLine3()
+//     DiagonalLine1()
+//     DiagonalLine2()
+// }
+
+// @Preview(showBackground = true)
+// @Composable
+// fun CrossPreview() {
+//     Cross()
+// }
+
+// @Preview(showBackground = true)
+// @Composable
+// fun CirclePreview() {
+//     Circle()
+// }
