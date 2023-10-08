@@ -66,7 +66,7 @@ class GameViewModel : ViewModel() {
                 victoryType = VictoryType.NONE,
                 hasWon = false
             )
-            computerMove()
+            computerX()
         }
     }
 
@@ -121,7 +121,7 @@ class GameViewModel : ViewModel() {
         }
         //Computer will action only when X turn
         if(!hasBoardFull() && state.currentTurn == BoardCellValue.CROSS){
-            computerMove()
+            computerX()
         }
     }
     private fun canWin(boardValue: BoardCellValue):Boolean{
@@ -162,12 +162,13 @@ return false
     private fun middleFree():Boolean{
         return boardItems[5] == BoardCellValue.NONE
     }
-    
-    private fun computerMove(){
+
+    private fun computerX(){
         // use canWin() to check if computer can win
         if (canWin(BoardCellValue.CROSS)){
             addValueToBoard(targetCell)
         }
+        // use canBlock() to check if computer can block user
         else if(canBlock()){
             addValueToBoard(targetCell)
         }
