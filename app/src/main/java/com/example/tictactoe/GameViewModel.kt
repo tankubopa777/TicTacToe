@@ -32,7 +32,14 @@ class GameViewModel : ViewModel() {
             }
 
             UserAction.PlayAgainButtonClicked -> {
-                gameReset()
+                // if game is not over, do nothing
+                if (!state.hasWon && !hasBoardFull()) {
+                    return
+                } else {
+                // if game is over, reset the game
+                    gameReset()
+                }
+                
             }
         }
     }
