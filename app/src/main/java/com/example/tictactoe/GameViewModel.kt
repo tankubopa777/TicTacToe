@@ -43,11 +43,13 @@ class GameViewModel : ViewModel() {
             }
         }
     }
+    // use state.startRound to store the start round
     private var startRound = state.startRound
     private fun gameReset() {
         boardItems.forEach { (i, _) ->
             boardItems[i] = BoardCellValue.NONE
         }
+        // alternate startRound
         startRound = if (startRound == BoardCellValue.CIRCLE){
             BoardCellValue.CROSS
         }
