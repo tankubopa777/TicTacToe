@@ -158,6 +158,7 @@ return false
         return boardItems[5] == BoardCellValue.NONE
     }
     private fun computerMove(){
+        // use canWin() to check if computer can win
         if (canWin(BoardCellValue.CROSS)){
             addValueToBoard(targetCell)
         }
@@ -169,7 +170,7 @@ return false
             addValueToBoard(5) 
         }
         else{
-            //Randomly put X at any empty cell
+            //Randomly put X 
             var randomCell = 0
             while(true){
                 randomCell = Random.nextInt(1,10)
