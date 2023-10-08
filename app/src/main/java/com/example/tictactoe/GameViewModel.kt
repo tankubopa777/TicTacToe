@@ -9,7 +9,10 @@ import kotlin.random.Random
 
 class GameViewModel : ViewModel() {
     var state by mutableStateOf(GameState())
+    
+    // use targetCell to store the cell number that computer will move
     var targetCell = 0
+
     val boardItems: MutableMap<Int, BoardCellValue> = mutableMapOf(
         1 to BoardCellValue.NONE,
         2 to BoardCellValue.NONE,
@@ -134,7 +137,7 @@ class GameViewModel : ViewModel() {
         8 to listOf(listOf(7, 9), listOf(2, 5)),
         9 to listOf(listOf(1, 5), listOf(3, 6), listOf(7, 8))
         )
-
+        // loop through winPatterns to check if computer can win
         for ((cell, patterns) in winPatterns) {
             for (pattern in patterns) {
                 if (pattern.all { boardItems[it] == boardValue } && boardItems[cell] == BoardCellValue.NONE) {
@@ -154,9 +157,12 @@ return false
         }
         return false
     }
+
+    // Check if middle is free
     private fun middleFree():Boolean{
         return boardItems[5] == BoardCellValue.NONE
     }
+    
     private fun computerMove(){
         // use canWin() to check if computer can win
         if (canWin(BoardCellValue.CROSS)){
@@ -170,7 +176,7 @@ return false
             addValueToBoard(5) 
         }
         else{
-            //Randomly put X 
+            // if no one can win then put X at random cell
             var randomCell = 0
             while(true){
                 randomCell = Random.nextInt(1,10)
