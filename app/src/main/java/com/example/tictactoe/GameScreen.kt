@@ -59,7 +59,7 @@ fun GameScreen(
         ) {
             Text(text = "Player 'O': ${state.playerCircleCount}", fontSize = 16.sp)
             Text(text = "Draw: ${state.drawCount}", fontSize = 16.sp)
-            Text(text = "Player 'X': ${state.playerCrossCount}", fontSize = 16.sp)
+            Text(text = "Computer 'X': ${state.playerCrossCount}", fontSize = 16.sp)
         }
         Text(
             text = "Tic Tac Toe",
