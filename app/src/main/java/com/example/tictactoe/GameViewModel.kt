@@ -9,7 +9,7 @@ import kotlin.random.Random
 
 class GameViewModel : ViewModel() {
     var state by mutableStateOf(GameState())
-    var winCell = 0
+    var targetCell = 0
     val boardItems: MutableMap<Int, BoardCellValue> = mutableMapOf(
         1 to BoardCellValue.NONE,
         2 to BoardCellValue.NONE,
@@ -33,37 +33,37 @@ class GameViewModel : ViewModel() {
             }
         }
     }
-    private var beginTurn = state.beginTurn
+    private var startRound = state.startRound
     private fun gameReset() {
         boardItems.forEach { (i, _) ->
             boardItems[i] = BoardCellValue.NONE
         }
-        beginTurn = if (beginTurn == BoardCellValue.CIRCLE){
+        startRound = if (startRound == BoardCellValue.CIRCLE){
             BoardCellValue.CROSS
         }
         else{
             BoardCellValue.CIRCLE
         }
-        changeBeginTurn()
+        changeStartRound()
 
     }
-    private fun changeBeginTurn(){
-        if(beginTurn == BoardCellValue.CIRCLE){
+    // Change turn
+    private fun changeStartRound(){
+        if(startRound == BoardCellValue.CIRCLE){
             state = state.copy(
                 hintText = "Player 'O' turn",
-                currentTurn = beginTurn,
+                currentTurn = startRound,
                 victoryType = VictoryType.NONE,
                 hasWon = false
-
             )
         } else{
             state = state.copy(
-                hintText = "Computer turn",
-                currentTurn = beginTurn,
+                hintText = "Computer 'X' turn",
+                currentTurn = startRound,
                 victoryType = VictoryType.NONE,
                 hasWon = false
             )
-            computerMove() //Perform computerMove() after change turn to CROSS
+            computerMove()
         }
     }
 
@@ -94,7 +94,7 @@ class GameViewModel : ViewModel() {
                 )
 
             }
-        //Player X turn //Perform by computerMove()
+      
         } else if (state.currentTurn == BoardCellValue.CROSS) {
             boardItems[cellNo] = BoardCellValue.CROSS
             state = if (checkForVictory(BoardCellValue.CROSS)) {
@@ -122,73 +122,33 @@ class GameViewModel : ViewModel() {
         }
     }
     private fun canWin(boardValue: BoardCellValue):Boolean{
-        //target winCell
-        //[1] >> [2][3], [5][9], [4][7]
-        //[2] >> [1][3], [5][8]
-        //[3] >> [1][2],[5][7], [6][9]
-        //[4] >> [1][7], [5][6]
-        //[5] >> [2][8], [4][6], [1],[9], [3][7]
-        //[6] >> [3][9], [4][5]
-        //[7] >> [1][4], [3][5], [8][9]
-        //[8] >> [7][9], [2][5]
-        //[9] >> [7][8], [1][5], [3][6]
-        when {
-            ((boardItems[2] == boardValue && boardItems[3] == boardValue)||
-                    (boardItems[5] == boardValue && boardItems[9] == boardValue)||
-                        (boardItems[4] == boardValue && boardItems[7] == boardValue)) && boardItems[1] == BoardCellValue.NONE -> {
-                winCell = 1
-                return true
+        //Check if computer can win
+        val winPatterns = mapOf(
+        1 to listOf(listOf(2, 3), listOf(5, 9), listOf(4, 7)),
+        2 to listOf(listOf(1, 3), listOf(5, 8)),
+        3 to listOf(listOf(1, 2), listOf(5, 7), listOf(6, 9)),
+        4 to listOf(listOf(1, 7), listOf(5, 6)),
+        5 to listOf(listOf(2, 8), listOf(4, 6), listOf(1, 9), listOf(3, 7)),
+        6 to listOf(listOf(3, 9), listOf(4, 5)),
+        7 to listOf(listOf(1, 4), listOf(3, 5), listOf(8, 9)),
+        8 to listOf(listOf(7, 9), listOf(2, 5)),
+        9 to listOf(listOf(1, 5), listOf(3, 6), listOf(7, 8))
+        )
+
+        for ((cell, patterns) in winPatterns) {
+            for (pattern in patterns) {
+                if (pattern.all { boardItems[it] == boardValue } && boardItems[cell] == BoardCellValue.NONE) {
+                    targetCell = cell
+                    return true
+                }
             }
-            ((boardItems[1] == boardValue && boardItems[3] == boardValue)||
-                (boardItems[5] == boardValue && boardItems[8] == boardValue)) && boardItems[2] == BoardCellValue.NONE -> {
-                winCell = 2
-                return true
-            }
-            ((boardItems[1] == boardValue && boardItems[2] == boardValue)||
-                    (boardItems[5] == boardValue && boardItems[7] == boardValue)||
-                    (boardItems[6] == boardValue && boardItems[9] == boardValue)) && boardItems[3] == BoardCellValue.NONE -> {
-                winCell = 3
-                return true
-            }
-            ((boardItems[1] == boardValue && boardItems[7] == boardValue)||
-                    (boardItems[5] == boardValue && boardItems[6] == boardValue)) && boardItems[4] == BoardCellValue.NONE -> {
-                winCell = 4
-                return true
-            }
-            ((boardItems[2] == boardValue && boardItems[8] == boardValue)||
-                    (boardItems[4] == boardValue && boardItems[6] == boardValue)||
-                    (boardItems[1] == boardValue && boardItems[9] == boardValue)||
-                    (boardItems[3] == boardValue && boardItems[7] == boardValue)) && boardItems[5] == BoardCellValue.NONE -> {
-                winCell = 5
-                return true
-            }
-            ((boardItems[3] == boardValue && boardItems[9] == boardValue)||
-                    (boardItems[4] == boardValue && boardItems[5] == boardValue)) && boardItems[6] == BoardCellValue.NONE -> {
-                winCell = 6
-                return true
-            }
-            ((boardItems[1] == boardValue && boardItems[4] == boardValue)||
-                    (boardItems[3] == boardValue && boardItems[5] == boardValue)||
-                    (boardItems[8] == boardValue && boardItems[9] == boardValue)) && boardItems[7] == BoardCellValue.NONE -> {
-                winCell = 7
-                return true
-            }
-            ((boardItems[7] == boardValue && boardItems[9] == boardValue)||
-                    (boardItems[2] == boardValue && boardItems[5] == boardValue)) && boardItems[8] == BoardCellValue.NONE -> {
-                winCell = 8
-                return true
-            }
-            ((boardItems[1] == boardValue && boardItems[5] == boardValue)||
-                    (boardItems[3] == boardValue && boardItems[6] == boardValue)||
-                    (boardItems[7] == boardValue && boardItems[8] == boardValue)) && boardItems[9] == BoardCellValue.NONE -> {
-                winCell = 9
-                return true
-            }
-            else -> return false
         }
+
+return false
+
     }
     private fun canBlock():Boolean{
-        //Computer's turn so we call canWin() with CIRCLE to check where to block them
+        //Check if computer can block
         if(canWin(BoardCellValue.CIRCLE)){
             return true
         }
@@ -199,17 +159,17 @@ class GameViewModel : ViewModel() {
     }
     private fun computerMove(){
         if (canWin(BoardCellValue.CROSS)){
-            //after canWin() return true it also located winCell
-            addValueToBoard(winCell)
+            addValueToBoard(targetCell)
         }
         else if(canBlock()){
-            addValueToBoard(winCell)
+            addValueToBoard(targetCell)
         }
+        // if middle is free then put X at middle
         else if(middleFree()){
-            addValueToBoard(5) //Computer put X in 5th cell
+            addValueToBoard(5) 
         }
         else{
-            //computer random putting X at a empty cell
+            //Randomly put X at any empty cell
             var randomCell = 0
             while(true){
                 randomCell = Random.nextInt(1,10)
