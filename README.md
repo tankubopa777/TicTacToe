@@ -7,7 +7,7 @@
   - รหัสนักศึกษา: 6410742446
 
 ### 🛠 Program language:
-- Swift
+- Kotlin
 
 ### 🎥 Demo:
 -https://drive.google.com/file/d/1b9TcKI_kRP9n4sMYzDUg_QYYgzFk8N01/view?usp=sharing
